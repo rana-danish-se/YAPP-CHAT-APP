@@ -1,17 +1,20 @@
 import express from 'express';
 import { getMessages, uploadFile } from '../controllers/MessagesController.js';
 import { verifyToken } from '../middlewares/AuthMiddleware.js';
-import multer from 'multer'
+import uploadMessage from "../middlewares/cloudinaryMessageStorage.js";
+import { handleMulterError } from '../middlewares/FileUploadErrorHandler.js';
+
 
 const messageRouter = express.Router();
 
-const upload = multer({ dest: 'uploads/files' });
-
+// 🟢 Get all messages
 messageRouter.post('/get-messages', verifyToken, getMessages);
 
+// 🟢 Upload file (image, video, doc, etc.)
 messageRouter.post(
   '/upload-file',
-  upload.single('file'),
+  uploadMessage.single("file"),
+  handleMulterError, 
   verifyToken,
   uploadFile
 );

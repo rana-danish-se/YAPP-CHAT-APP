@@ -47,32 +47,36 @@ export const getMessages = async (req, res) => {
 
 
 
+
+
 export const uploadFile = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).send('File is required');
+      return res.status(400).json({
+        success: false,
+        message: "File is required",
+      });
     }
 
-    const filePath = req.file.path;
-
-    const uploadedResponse = await cloudinary.uploader.upload(filePath, {
-      resource_type: 'auto', // important: handles all file types
-      folder: 'chat-attachments',
-    });
-
-    // delete the file from temp local storage
-    fs.unlinkSync(filePath);
-
+    // Multer + Cloudinary middleware already uploads the file
+    // File URL is available at req.file.path
     return res.status(200).json({
       success: true,
-      filePath: uploadedResponse.secure_url,
+      filePath: req.file.path, // Cloudinary secure_url
     });
+
   } catch (error) {
-    console.error(error);
+    if (error.code === "LIMIT_FILE_SIZE") {
+      return res.status(413).json({
+        success: false,
+        message: "File too large. Max size is 10MB.",
+      });
+    }
+
+    console.error("Upload error:", error);
     return res.status(500).json({
       success: false,
-      message: 'Something went wrong. Please try again later.',
+      message: "Something went wrong. Please try again later.",
     });
   }
 };
-

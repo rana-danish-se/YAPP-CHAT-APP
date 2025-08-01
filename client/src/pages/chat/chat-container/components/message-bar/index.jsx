@@ -108,7 +108,7 @@ const MessageBar = () => {
           }
         } else {
           setIsUploading(false);
-          console.log(message);
+          toast.error(message);
         }
       }
     } catch (error) {
