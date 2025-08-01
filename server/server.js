@@ -18,7 +18,7 @@ const port = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: [process.env.ORIGIN],
+    origin: [process.env.ORIGIN || 'https://yapp-chat-three.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   })
