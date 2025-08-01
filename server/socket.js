@@ -5,7 +5,7 @@ import Channel from './models/ChannelModel.js';
 const setupSocket = (server) => {
   const io = new SocketIOServer(server, {
     cors: {
-      origin: process.env.ORIGIN || 'http://localhost:5173',
+      origin: process.env.ORIGIN  || 'https://yapp-chat-three.vercel.app',
       methods: ['GET', 'POST'],
       credentials: true,
     },
